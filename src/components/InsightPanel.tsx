@@ -12,11 +12,14 @@ import jsPDF from "jspdf";
 interface InsightPanelProps {
   data: DataRow[];
   columns: ColumnInfo[];
+  isExpanded?: boolean;
+  onToggleExpanded?: () => void;
 }
 
-export function InsightPanel({ data, columns }: InsightPanelProps) {
+export function InsightPanel({ data, columns, isExpanded = false, onToggleExpanded }: InsightPanelProps) {
   const [insights, setInsights] = useState<DataInsight[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const { toast } = useToast();
 
   const generateAIInsights = async () => {

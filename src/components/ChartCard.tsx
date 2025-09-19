@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Settings, Trash2, GripVertical } from "lucide-react";
+import { Settings, Trash2, GripVertical, Maximize2, Minimize2, Download, Filter } from "lucide-react";
+import html2canvas from "html2canvas";
+import { useToast } from "@/hooks/use-toast";
 import {
   ResponsiveContainer,
   BarChart,
@@ -50,6 +52,9 @@ export interface ChartConfig {
   yAxis?: string;
   color?: string;
   group?: string;
+  aggregation?: 'sum' | 'avg' | 'count' | 'min' | 'max';
+  filter?: string;
+  isMaximized?: boolean;
 }
 
 interface ChartCardProps {
@@ -58,6 +63,7 @@ interface ChartCardProps {
   columns: ColumnInfo[];
   onUpdate: (config: ChartConfig) => void;
   onDelete: (id: string) => void;
+  onExportImage?: (id: string) => void;
 }
 
 const CHART_COLORS = [
@@ -69,13 +75,46 @@ const CHART_COLORS = [
   'hsl(var(--chart-6))',
 ];
 
-export function ChartCard({ config, data, columns, onUpdate, onDelete }: ChartCardProps) {
+export function ChartCard({ config, data, columns, onUpdate, onDelete, onExportImage }: ChartCardProps) {
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [editConfig, setEditConfig] = useState<ChartConfig>(config);
+  const chartRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const handleSave = () => {
     onUpdate(editConfig);
     setIsConfigOpen(false);
+  };
+
+  const handleToggleMaximize = () => {
+    onUpdate({ ...config, isMaximized: !config.isMaximized });
+  };
+
+  const handleExportImage = async () => {
+    if (!chartRef.current) return;
+    
+    try {
+      const canvas = await html2canvas(chartRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+      });
+      
+      const link = document.createElement('a');
+      link.download = `${config.title.replace(/\s+/g, '_').toLowerCase()}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+      
+      toast({
+        title: "Chart exported",
+        description: "Your chart has been saved as an image.",
+      });
+    } catch (error) {
+      toast({
+        title: "Export failed",
+        description: "Failed to export chart as image.",
+        variant: "destructive",
+      });
+    }
   };
 
   const renderChart = () => {
@@ -97,11 +136,63 @@ export function ChartCard({ config, data, columns, onUpdate, onDelete }: ChartCa
       );
     }
 
-    const processedData = data.map(row => ({
+    // Apply filters if specified
+    let filteredData = data;
+    if (config.filter) {
+      try {
+        filteredData = data.filter(row => {
+          return Object.entries(row).some(([key, value]) =>
+            String(value).toLowerCase().includes(config.filter!.toLowerCase())
+          );
+        });
+      } catch (error) {
+        // Ignore filter errors
+      }
+    }
+
+    // Process and aggregate data
+    let processedData = filteredData.map(row => ({
       ...row,
       [config.xAxis!]: String(row[config.xAxis!]),
       [config.yAxis!]: Number(row[config.yAxis!]) || 0,
     }));
+
+    // Apply aggregation for grouped data
+    if (config.aggregation && config.aggregation !== 'count') {
+      const grouped = processedData.reduce((acc, row) => {
+        const key = row[config.xAxis!];
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(row);
+        return acc;
+      }, {} as Record<string, any[]>);
+
+      processedData = Object.entries(grouped).map(([key, values]) => {
+        const numericValues = values.map(v => Number(v[config.yAxis!]) || 0);
+        let aggregatedValue = 0;
+
+        switch (config.aggregation) {
+          case 'sum':
+            aggregatedValue = numericValues.reduce((sum, val) => sum + val, 0);
+            break;
+          case 'avg':
+            aggregatedValue = numericValues.reduce((sum, val) => sum + val, 0) / numericValues.length;
+            break;
+          case 'min':
+            aggregatedValue = Math.min(...numericValues);
+            break;
+          case 'max':
+            aggregatedValue = Math.max(...numericValues);
+            break;
+          default:
+            aggregatedValue = values.length;
+        }
+
+        return {
+          [config.xAxis!]: key,
+          [config.yAxis!]: aggregatedValue,
+        };
+      });
+    }
 
     switch (config.type) {
       case 'bar':
@@ -170,7 +261,7 @@ export function ChartCard({ config, data, columns, onUpdate, onDelete }: ChartCa
         );
 
       case 'pie':
-        const pieData = data.reduce((acc, row) => {
+        const pieData = processedData.reduce((acc, row) => {
           const key = String(row[config.xAxis!]);
           const value = Number(row[config.yAxis!]) || 0;
           acc[key] = (acc[key] || 0) + value;
@@ -214,7 +305,7 @@ export function ChartCard({ config, data, columns, onUpdate, onDelete }: ChartCa
                 </tr>
               </thead>
               <tbody>
-                {data.slice(0, 10).map((row, index) => (
+                {filteredData.slice(0, 10).map((row, index) => (
                   <tr key={index} className="border-b border-border/50">
                     {columns.slice(0, 5).map((col) => (
                       <td key={col.name} className="p-2 text-sm">
@@ -230,9 +321,9 @@ export function ChartCard({ config, data, columns, onUpdate, onDelete }: ChartCa
 
       case 'kpi':
         if (!config.yAxis) return null;
-        const total = data.reduce((sum, row) => sum + (Number(row[config.yAxis!]) || 0), 0);
-        const average = total / data.length;
-        const max = Math.max(...data.map(row => Number(row[config.yAxis!]) || 0));
+        const total = filteredData.reduce((sum, row) => sum + (Number(row[config.yAxis!]) || 0), 0);
+        const average = total / filteredData.length;
+        const max = Math.max(...filteredData.map(row => Number(row[config.yAxis!]) || 0));
 
         return (
           <div className="grid grid-cols-3 gap-4 p-4">
@@ -260,7 +351,14 @@ export function ChartCard({ config, data, columns, onUpdate, onDelete }: ChartCa
   const allColumns = columns;
 
   return (
-    <Card className="chart-container group">
+    <Card 
+      ref={chartRef}
+      className={`chart-container group transition-all duration-300 ${
+        config.isMaximized 
+          ? 'fixed inset-4 z-50 bg-background shadow-2xl' 
+          : ''
+      }`}
+    >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="flex items-center gap-2">
           <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -268,8 +366,43 @@ export function ChartCard({ config, data, columns, onUpdate, onDelete }: ChartCa
           <Badge variant="outline" className="text-xs">
             {config.type}
           </Badge>
+          {config.filter && (
+            <Badge variant="secondary" className="text-xs">
+              <Filter className="h-3 w-3 mr-1" />
+              Filtered
+            </Badge>
+          )}
+          {config.aggregation && config.aggregation !== 'count' && (
+            <Badge variant="outline" className="text-xs">
+              {config.aggregation.toUpperCase()}
+            </Badge>
+          )}
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={handleExportImage}
+            title="Export as image"
+          >
+            <Download className="h-4 w-4" />
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+            onClick={handleToggleMaximize}
+            title={config.isMaximized ? "Minimize" : "Maximize"}
+          >
+            {config.isMaximized ? (
+              <Minimize2 className="h-4 w-4" />
+            ) : (
+              <Maximize2 className="h-4 w-4" />
+            )}
+          </Button>
+
           <Dialog open={isConfigOpen} onOpenChange={setIsConfigOpen}>
             <DialogTrigger asChild>
               <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -375,6 +508,43 @@ export function ChartCard({ config, data, columns, onUpdate, onDelete }: ChartCa
                   </div>
                 )}
 
+                {editConfig.type !== 'table' && (
+                  <div className="grid gap-2">
+                    <Label htmlFor="aggregation">Aggregation Function</Label>
+                    <Select
+                      value={editConfig.aggregation || 'count'}
+                      onValueChange={(value: 'sum' | 'avg' | 'count' | 'min' | 'max') => 
+                        setEditConfig(prev => ({ ...prev, aggregation: value }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="count">Count</SelectItem>
+                        <SelectItem value="sum">Sum</SelectItem>
+                        <SelectItem value="avg">Average</SelectItem>
+                        <SelectItem value="min">Minimum</SelectItem>
+                        <SelectItem value="max">Maximum</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                <div className="grid gap-2">
+                  <Label htmlFor="filter">Filter Data</Label>
+                  <input
+                    id="filter"
+                    value={editConfig.filter || ''}
+                    onChange={(e) => setEditConfig(prev => ({ ...prev, filter: e.target.value }))}
+                    placeholder="Enter filter term..."
+                    className="px-3 py-2 border rounded-md"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Filter rows containing this text in any column
+                  </p>
+                </div>
+
                 <div className="flex gap-2">
                   <Button onClick={handleSave} className="flex-1">
                     Save Changes
@@ -395,7 +565,7 @@ export function ChartCard({ config, data, columns, onUpdate, onDelete }: ChartCa
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-64">
+        <div className={config.isMaximized ? "h-[calc(100vh-12rem)]" : "h-64"}>
           {renderChart()}
         </div>
       </CardContent>

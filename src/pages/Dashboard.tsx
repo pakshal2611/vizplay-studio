@@ -5,8 +5,10 @@ import { TopNav } from "@/components/TopNav";
 import { DataImporter, DataPreview } from "@/components/DataImporter";
 import { ChartCard, type ChartConfig, type ChartType } from "@/components/ChartCard";
 import { InsightPanel } from "@/components/InsightPanel";
+import { ChartModal } from "@/components/ChartModal";
+import { PresentationModal } from "@/components/PresentationModal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, PanelLeftClose, PanelLeftOpen, Grid, BarChart3 } from "lucide-react";
+import { Plus, PanelLeftClose, PanelLeftOpen, Grid, BarChart3, Presentation } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -68,7 +70,10 @@ export default function Dashboard() {
   const [charts, setCharts] = useState<ChartConfig[]>([]);
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
+  const [rightPanelExpanded, setRightPanelExpanded] = useState(false);
   const [user, setUser] = useState<{ email: string; name: string } | null>(null);
+  const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+  const [isPresentationMode, setIsPresentationMode] = useState(false);
   const navigate = useNavigate();
 
   const sensors = useSensors(
@@ -138,6 +143,15 @@ export default function Dashboard() {
       title: `New ${type.charAt(0).toUpperCase() + type.slice(1)} Chart`,
     };
     setCharts(prev => [...prev, newChart]);
+  };
+
+  const addMultipleCharts = (types: ChartType[]) => {
+    const newCharts: ChartConfig[] = types.map(type => ({
+      id: `chart-${Date.now()}-${Math.random()}`,
+      type,
+      title: `New ${type.charAt(0).toUpperCase() + type.slice(1)} Chart`,
+    }));
+    setCharts(prev => [...prev, ...newCharts]);
   };
 
   const updateChart = (updatedChart: ChartConfig) => {
@@ -234,7 +248,15 @@ export default function Dashboard() {
               {data.length > 0 && (
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => addChart('bar')}
+                    variant="outline"
+                    onClick={() => setIsPresentationMode(true)}
+                    disabled={charts.length === 0}
+                  >
+                    <Presentation className="mr-2 h-4 w-4" />
+                    Present
+                  </Button>
+                  <Button
+                    onClick={() => setIsChartModalOpen(true)}
                     className="bg-chart-1 hover:opacity-90"
                   >
                     <Plus className="mr-2 h-4 w-4" />
@@ -327,11 +349,13 @@ export default function Dashboard() {
         {/* Right Panel */}
         <motion.div
           initial={false}
-          animate={{ width: rightPanelCollapsed ? 0 : 320 }}
+          animate={{ 
+            width: rightPanelCollapsed ? 0 : rightPanelExpanded ? 600 : 320 
+          }}
           transition={{ duration: 0.3 }}
           className="border-l bg-surface/50 overflow-hidden"
         >
-          <div className="w-80 p-4">
+          <div className={`${rightPanelExpanded ? 'w-[600px]' : 'w-80'} p-4`}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-semibold">Insights & Export</h2>
               <Button
@@ -344,7 +368,12 @@ export default function Dashboard() {
               </Button>
             </div>
             
-            <InsightPanel data={data} columns={columns} />
+            <InsightPanel 
+              data={data} 
+              columns={columns} 
+              isExpanded={rightPanelExpanded}
+              onToggleExpanded={() => setRightPanelExpanded(!rightPanelExpanded)}
+            />
           </div>
         </motion.div>
 
@@ -361,6 +390,23 @@ export default function Dashboard() {
             </Button>
           </div>
         )}
+
+        {/* Chart Selection Modal */}
+        <ChartModal
+          open={isChartModalOpen}
+          onOpenChange={setIsChartModalOpen}
+          onSelectChart={addChart}
+          onSelectMultipleCharts={addMultipleCharts}
+        />
+
+        {/* Presentation Modal */}
+        <PresentationModal
+          open={isPresentationMode}
+          onOpenChange={setIsPresentationMode}
+          charts={charts}
+          data={data}
+          columns={columns}
+        />
       </div>
     </div>
   );
