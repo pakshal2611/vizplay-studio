@@ -1,0 +1,21 @@
+date,region,rep,product,units,unit_price,revenue
+2024-01-15,North,Alice Johnson,Widget Pro,45,299.99,13499.55
+2024-01-15,South,Bob Smith,Widget Basic,32,149.99,4799.68
+2024-01-16,East,Carol Davis,Widget Pro,28,299.99,8399.72
+2024-01-16,West,David Wilson,Widget Premium,18,499.99,8999.82
+2024-01-17,North,Alice Johnson,Widget Basic,52,149.99,7799.48
+2024-01-17,South,Bob Smith,Widget Premium,15,499.99,7499.85
+2024-01-18,East,Carol Davis,Widget Basic,67,149.99,10049.33
+2024-01-18,West,David Wilson,Widget Pro,41,299.99,12299.59
+2024-01-19,North,Alice Johnson,Widget Premium,22,499.99,10999.78
+2024-01-19,South,Bob Smith,Widget Pro,38,299.99,11399.62
+2024-01-20,East,Carol Davis,Widget Premium,19,499.99,9499.81
+2024-01-20,West,David Wilson,Widget Basic,58,149.99,8699.42
+2024-01-21,North,Eve Anderson,Widget Pro,33,299.99,9899.67
+2024-01-21,South,Frank Miller,Widget Basic,44,149.99,6599.56
+2024-01-22,East,Grace Lee,Widget Premium,26,499.99,12999.74
+2024-01-22,West,Henry Taylor,Widget Pro,39,299.99,11699.61
+2024-01-23,North,Eve Anderson,Widget Basic,61,149.99,9149.39
+2024-01-23,South,Frank Miller,Widget Premium,14,499.99,6999.86
+2024-01-24,East,Grace Lee,Widget Pro,47,299.99,14099.53
+2024-01-24,West,Henry Taylor,Widget Basic,55,149.99,8249.45

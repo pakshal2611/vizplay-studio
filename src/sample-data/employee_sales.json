@@ -1,0 +1,182 @@
+[
+  {
+    "date": "2024-01-15",
+    "region": "North",
+    "rep": "Alice Johnson",
+    "product": "Widget Pro",
+    "units": 45,
+    "unit_price": 299.99,
+    "revenue": 13499.55
+  },
+  {
+    "date": "2024-01-15",
+    "region": "South",
+    "rep": "Bob Smith",
+    "product": "Widget Basic",
+    "units": 32,
+    "unit_price": 149.99,
+    "revenue": 4799.68
+  },
+  {
+    "date": "2024-01-16",
+    "region": "East",
+    "rep": "Carol Davis",
+    "product": "Widget Pro",
+    "units": 28,
+    "unit_price": 299.99,
+    "revenue": 8399.72
+  },
+  {
+    "date": "2024-01-16",
+    "region": "West",
+    "rep": "David Wilson",
+    "product": "Widget Premium",
+    "units": 18,
+    "unit_price": 499.99,
+    "revenue": 8999.82
+  },
+  {
+    "date": "2024-01-17",
+    "region": "North",
+    "rep": "Alice Johnson",
+    "product": "Widget Basic",
+    "units": 52,
+    "unit_price": 149.99,
+    "revenue": 7799.48
+  },
+  {
+    "date": "2024-01-17",
+    "region": "South",
+    "rep": "Bob Smith",
+    "product": "Widget Premium",
+    "units": 15,
+    "unit_price": 499.99,
+    "revenue": 7499.85
+  },
+  {
+    "date": "2024-01-18",
+    "region": "East",
+    "rep": "Carol Davis",
+    "product": "Widget Basic",
+    "units": 67,
+    "unit_price": 149.99,
+    "revenue": 10049.33
+  },
+  {
+    "date": "2024-01-18",
+    "region": "West",
+    "rep": "David Wilson",
+    "product": "Widget Pro",
+    "units": 41,
+    "unit_price": 299.99,
+    "revenue": 12299.59
+  },
+  {
+    "date": "2024-01-19",
+    "region": "North",
+    "rep": "Alice Johnson",
+    "product": "Widget Premium",
+    "units": 22,
+    "unit_price": 499.99,
+    "revenue": 10999.78
+  },
+  {
+    "date": "2024-01-19",
+    "region": "South",
+    "rep": "Bob Smith",
+    "product": "Widget Pro",
+    "units": 38,
+    "unit_price": 299.99,
+    "revenue": 11399.62
+  },
+  {
+    "date": "2024-01-20",
+    "region": "East",
+    "rep": "Carol Davis",
+    "product": "Widget Premium",
+    "units": 19,
+    "unit_price": 499.99,
+    "revenue": 9499.81
+  },
+  {
+    "date": "2024-01-20",
+    "region": "West",
+    "rep": "David Wilson",
+    "product": "Widget Basic",
+    "units": 58,
+    "unit_price": 149.99,
+    "revenue": 8699.42
+  },
+  {
+    "date": "2024-01-21",
+    "region": "North",
+    "rep": "Eve Anderson",
+    "product": "Widget Pro",
+    "units": 33,
+    "unit_price": 299.99,
+    "revenue": 9899.67
+  },
+  {
+    "date": "2024-01-21",
+    "region": "South",
+    "rep": "Frank Miller",
+    "product": "Widget Basic",
+    "units": 44,
+    "unit_price": 149.99,
+    "revenue": 6599.56
+  },
+  {
+    "date": "2024-01-22",
+    "region": "East",
+    "rep": "Grace Lee",
+    "product": "Widget Premium",
+    "units": 26,
+    "unit_price": 499.99,
+    "revenue": 12999.74
+  },
+  {
+    "date": "2024-01-22",
+    "region": "West",
+    "rep": "Henry Taylor",
+    "product": "Widget Pro",
+    "units": 39,
+    "unit_price": 299.99,
+    "revenue": 11699.61
+  },
+  {
+    "date": "2024-01-23",
+    "region": "North",
+    "rep": "Eve Anderson",
+    "product": "Widget Basic",
+    "units": 61,
+    "unit_price": 149.99,
+    "revenue": 9149.39
+  },
+  {
+    "date": "2024-01-23",
+    "region": "South",
+    "rep": "Frank Miller",
+    "product": "Widget Premium",
+    "units": 14,
+    "unit_price": 499.99,
+    "revenue": 6999.86
+  },
+  {
+    "date": "2024-01-24",
+    "region": "East",
+    "rep": "Grace Lee",
+    "product": "Widget Pro",
+    "units": 47,
+    "unit_price": 299.99,
+    "revenue": 14099.53
+  },
+  {
+    "date": "2024-01-24",
+    "region": "West",
+    "rep": "Henry Taylor",
+    "product": "Widget Basic",
+    "units": 55,
+    "unit_price": 149.99,
+    "revenue": 8249.45
+  }
+]

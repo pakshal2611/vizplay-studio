@@ -2,95 +2,134 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Advanced Data Visualization Playground Design System
+All colors MUST be HSL with indigo → violet → blue gradient theme
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    /* Core Background & Text */
+    --background: 0 0% 99%;
+    --foreground: 222 47% 8%;
+    
+    /* Card & Surface */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --card-foreground: 222 47% 8%;
+    --surface: 225 25% 97%;
+    --surface-elevated: 0 0% 100%;
+    
+    /* Primary Gradient System - Indigo to Violet to Blue */
+    --primary: 238 72% 65%;
+    --primary-glow: 245 80% 75%;
+    --primary-deep: 232 62% 55%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary & Accent Colors */
+    --secondary: 225 15% 95%;
+    --secondary-foreground: 222 47% 15%;
+    --accent: 245 50% 92%;
+    --accent-foreground: 238 72% 35%;
+    
+    /* Muted & Subtle */
+    --muted: 225 15% 95%;
+    --muted-foreground: 225 25% 45%;
+    
+    /* Interactive States */
+    --border: 225 25% 88%;
+    --input: 225 25% 88%;
+    --ring: 238 72% 65%;
+    --hover: 238 72% 60%;
+    
+    /* Status Colors */
+    --success: 142 72% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 90% 55%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(238 72% 65%), hsl(260 75% 70%), hsl(220 80% 65%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(225 25% 98%));
+    --gradient-hero: linear-gradient(135deg, hsl(238 72% 65%) 0%, hsl(260 75% 70%) 50%, hsl(220 80% 65%) 100%);
+    
+    /* Shadows & Effects */
+    --shadow-sm: 0 1px 3px hsl(225 25% 20% / 0.1);
+    --shadow-md: 0 4px 12px hsl(225 25% 20% / 0.15);
+    --shadow-lg: 0 10px 30px hsl(225 25% 20% / 0.2);
+    --shadow-glow: 0 0 20px hsl(238 72% 65% / 0.3);
+    
+    /* Chart Colors */
+    --chart-1: 238 72% 65%;
+    --chart-2: 260 75% 70%;
+    --chart-3: 185 80% 55%;
+    --chart-4: 160 70% 50%;
+    --chart-5: 30 85% 60%;
+    --chart-6: 225 25% 60%;
+    
+    /* Animation & Motion */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Core Background & Text - Deep indigo/black theme */
+    --background: 232 45% 8%;
+    --foreground: 225 15% 92%;
+    
+    /* Card & Surface */
+    --card: 232 35% 12%;
+    --card-foreground: 225 15% 92%;
+    --surface: 232 40% 10%;
+    --surface-elevated: 232 35% 15%;
+    
+    /* Primary with Glow Effect */
+    --primary: 245 80% 75%;
+    --primary-glow: 260 85% 85%;
+    --primary-deep: 238 70% 60%;
+    --primary-foreground: 232 45% 8%;
+    
+    /* Secondary & Accent */
+    --secondary: 232 25% 18%;
+    --secondary-foreground: 225 15% 85%;
+    --accent: 238 40% 25%;
+    --accent-foreground: 245 80% 85%;
+    
+    /* Muted & Subtle */
+    --muted: 232 25% 18%;
+    --muted-foreground: 225 15% 65%;
+    
+    /* Interactive States */
+    --border: 232 25% 22%;
+    --input: 232 25% 22%;
+    --ring: 245 80% 75%;
+    --hover: 245 85% 80%;
+    
+    /* Status Colors - Adjusted for dark mode */
+    --success: 142 65% 55%;
+    --warning: 38 80% 65%;
+    --destructive: 0 75% 65%;
+    
+    /* Dark Mode Gradients with Glow */
+    --gradient-primary: linear-gradient(135deg, hsl(245 80% 75%), hsl(260 85% 80%), hsl(220 85% 75%));
+    --gradient-subtle: linear-gradient(180deg, hsl(232 45% 8%), hsl(232 40% 10%));
+    --gradient-hero: linear-gradient(135deg, hsl(245 80% 75%) 0%, hsl(260 85% 80%) 50%, hsl(220 85% 75%) 100%);
+    
+    /* Enhanced Shadows with Glow */
+    --shadow-sm: 0 1px 3px hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 12px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 10px 30px hsl(0 0% 0% / 0.5);
+    --shadow-glow: 0 0 30px hsl(245 80% 75% / 0.4);
+    
+    /* Chart Colors - Enhanced for dark mode */
+    --chart-1: 245 80% 75%;
+    --chart-2: 260 85% 80%;
+    --chart-3: 185 75% 65%;
+    --chart-4: 160 65% 60%;
+    --chart-5: 30 80% 70%;
+    --chart-6: 225 25% 70%;
   }
 }
 
@@ -100,6 +139,97 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    transition: var(--transition);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Hero Section Styles */
+  .hero-text {
+    @apply text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary via-primary-glow to-primary-deep bg-clip-text text-transparent;
+  }
+  
+  .hero-subtitle {
+    @apply text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed;
+  }
+  
+  /* Glass Morphism Effect */
+  .glass {
+    @apply backdrop-blur-xl bg-white/10 dark:bg-white/5 border border-white/20 dark:border-white/10;
+  }
+  
+  /* Chart Container */
+  .chart-container {
+    @apply bg-card rounded-lg border shadow-md p-6 transition-all duration-300 hover:shadow-lg;
+  }
+  
+  /* Data Table */
+  .data-table {
+    @apply w-full border-collapse bg-card rounded-lg overflow-hidden shadow-sm;
+  }
+  
+  /* Loading Animation */
+  .loading-shimmer {
+    @apply animate-pulse bg-gradient-to-r from-muted via-muted/50 to-muted;
+  }
+}
+
+@layer utilities {
+  /* Custom Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  /* Hover Effects */
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)];
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
   }
 }
